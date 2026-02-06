@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>User Information – Educational Project</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 20px;
+}
+button {
+  padding: 12px 20px;
+  font-size: 16px;
+  background: #22c55e;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+pre {
+  background: #020617;
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+.note {
+  font-size: 14px;
+  color: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🔍 User Information Detection (Educational Purpose)</h2>
+<p class="note">
+By clicking the button, you consent to share basic device & location info for educational demonstration.
+</p>
+
+<button onclick="collectData()">Allow & Show Info</button>
+
+<pre id="output">Waiting for permission...</pre>
+
+<script>
+async function collectData() {
+  let output = "";
+
+  // IP & Location
+  const ipData = await fetch("https://ipapi.co/json/").then(r => r.json());
+
+  output += "🌐 IP INFORMATION\n";
+  output += "IP Address: " + ipData.ip + "\n";
+  output += "City: " + ipData.city + "\n";
+  output += "Region: " + ipData.region + "\n";
+  output += "Country: " + ipData.country_name + "\n";
+  output += "ISP: " + ipData.org + "\n";
+  output += "Timezone: " + ipData.timezone + "\n\n";
+
+  // Device Info
+  output += "🖥 DEVICE INFORMATION\n";
+  output += "User Agent: " + navigator.userAgent + "\n";
+  output += "Platform: " + navigator.platform + "\n";
+  output += "Language: " + navigator.language + "\n";
+  output += "Screen Size: " + screen.width + " x " + screen.height + "\n\n";
+
+  // GPS Location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        output += "📍 GPS LOCATION (User Allowed)\n";
+        output += "Latitude: " + pos.coords.latitude + "\n";
+        output += "Longitude: " + pos.coords.longitude + "\n";
+        document.getElementById("output").textContent = output;
+      },
+      () => {
+        output += "📍 GPS LOCATION: Permission Denied\n";
+        document.getElementById("output").textContent = output;
+      }
+    );
+  } else {
+    output += "📍 GPS not supported\n";
+    document.getElementById("output").textContent = output;
+  }
+}
+</script>
+
+</body>
+</html>
